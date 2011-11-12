@@ -65,22 +65,22 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     $('img.current').hide();
                 }
 
-                $('a#first').click(function(e) {
+                $('button#first').click(function(e) {
                     e.preventDefault();
                     changeImage(0);
                 });
 
-                $('a#previous').click(function(e) {
+                $('button#previous').click(function(e) {
                     e.preventDefault();
                     changeImage(currentIndex - 1);
                 });
 
-                $('a#next').click(function(e) {
+                $('button#next').click(function(e) {
                     e.preventDefault();
                     changeImage(currentIndex + 1);
                 });
 
-                $('a#last').click(function(e) {
+                $('button#last').click(function(e) {
                     e.preventDefault();
                     changeImage(images.length - 1);
                 });
@@ -101,10 +101,10 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
     </head>
     <body>
         <div id="nav">
-            <a href="#first" id="first">First</a>
-            <a href="#previous" id="previous">Previous</a>
-            <a href="#next" id="next">Next</a>
-            <a href="#last" id="last">Last</a>
+            <button id="first">First</button>
+            <button id="previous">Previous</button>
+            <button id="next">Next</button>
+            <button id="last">Last</button>
             <hr/>
         </div>
         <div id="content">
