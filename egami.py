@@ -48,8 +48,11 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                 var currentIndex = images.length - 1;
 
                 function changeImage(index) {
-                    if (index < 0 || index > images.length - 1) {
-                        return;
+                    if (index < 0) {
+                        index = 0;
+                    }
+                    if (index > images.length - 1) {
+                        index = images.length - 1;
                     }
                     $('a.current').attr('href', '{{images_url}}' + images[index]);
                     $('img.current').attr('alt', images[index]);
@@ -72,12 +75,14 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
 
                 $('button#previous').click(function(e) {
                     e.preventDefault();
-                    changeImage(currentIndex - 1);
+                    var offset = parseInt($('#offset').val());
+                    changeImage(currentIndex - offset);
                 });
 
                 $('button#next').click(function(e) {
                     e.preventDefault();
-                    changeImage(currentIndex + 1);
+                    var offset = parseInt($('#offset').val());
+                    changeImage(currentIndex + offset);
                 });
 
                 $('button#last').click(function(e) {
@@ -88,6 +93,9 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         //]]>
         </script>
         <style type="text/css">
+            input#offset {
+                width: 30px;
+            }
             img.current {
                 max-height: 640px;
                 max-width: 640px;
@@ -103,6 +111,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         <div id="nav">
             <button id="first">First</button>
             <button id="previous">Previous</button>
+            <input id="offset" type="text" value="1"/>
             <button id="next">Next</button>
             <button id="last">Last</button>
             <hr/>
