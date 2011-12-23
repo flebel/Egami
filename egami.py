@@ -48,17 +48,27 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                 var currentIndex = images.length - 1;
 
                 function changeImage(index) {
+                    validIndex = getValidIndex(index);
+                    $('a.current').attr('href', '{{images_url}}' + images[validIndex]);
+                    $('img.current').attr('alt', images[validIndex]);
+                    $('img.current').attr('src', '{{images_url}}' + images[validIndex]);
+                    $('p#status').text("Now serving image " + (validIndex + 1) + " of {{number_images}} image(s) from '{{cwd}}'.");
+                    currentIndex = validIndex;
+                }
+
+                function getValidIndex(index) {
                     if (index < 0) {
                         index = 0;
                     }
                     if (index > images.length - 1) {
                         index = images.length - 1;
                     }
-                    $('a.current').attr('href', '{{images_url}}' + images[index]);
-                    $('img.current').attr('alt', images[index]);
-                    $('img.current').attr('src', '{{images_url}}' + images[index]);
-                    $('p#status').text("Now serving image " + (index + 1) + " of {{number_images}} image(s) from '{{cwd}}'.");
-                    currentIndex = index;
+                    return index;
+                }
+
+                function preloadImage(index) {
+                    validIndex = getValidIndex(index);
+                    $('<img />').attr('src', '{{images_url}}' + images[validIndex]).appendTo('body').hide();
                 }
 
                 // Initially set the current image to the last one
@@ -77,12 +87,18 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     e.preventDefault();
                     var offset = parseInt($('#offset').val());
                     changeImage(currentIndex - offset);
+                    // Preload the previous image according to the (new) current
+                    // position
+                    preloadImage(currentIndex - offset);
                 });
 
                 $('button#next').click(function(e) {
                     e.preventDefault();
                     var offset = parseInt($('#offset').val());
                     changeImage(currentIndex + offset);
+                    // Preload the next image according to the (new) current
+                    // position
+                    preloadImage(currentIndex + offset);
                 });
 
                 $('button#last').click(function(e) {
