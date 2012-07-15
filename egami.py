@@ -2,7 +2,7 @@
 
 # Egami: a very simple image gallery built using Flask, which
 # serves image files found in the directory where it is executed.
-# Copyright (C) 2011 Francois Lebel <francoislebel@gmail.com>
+# Copyright (C) 2011-2012 Francois Lebel <francoislebel@gmail.com>
 # http://github.com/flebel/egami
 #
 # This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,8 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     $('a.current').attr('href', '{{images_url}}' + images[validIndex]);
                     $('img.current').attr('alt', images[validIndex]);
                     $('img.current').attr('src', '{{images_url}}' + images[validIndex]);
-                    $('p#status').text("Now serving image " + (validIndex + 1) + " of {{number_images}} image(s) from '{{cwd}}'.");
+                    $('span.status').text("Now serving image " + (validIndex + 1) + " of {{number_images}} image(s) from '{{cwd}}':");
+                    $('span.filename').text(images[validIndex]);
                     currentIndex = validIndex;
                 }
 
@@ -133,7 +134,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
             <hr/>
         </div>
         <div id="content">
-            <p id="status"></p>
+            <p><span class="status"></span> <span class="filename"></span></p>
             <a class="current" href=""><img alt="" class="current" src=""/></a>
         </div>
     </body>
