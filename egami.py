@@ -106,6 +106,14 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     e.preventDefault();
                     changeImage(images.length - 1);
                 });
+
+                $('button#preload').click(function(e) {
+                    e.preventDefault();
+                    var offset = parseInt($('#offset').val());
+                    for (var i = currentIndex, n = images.length; i < n; i += offset) {
+                        preloadImage(i);
+                    }
+                });
             });
         //]]>
         </script>
@@ -131,6 +139,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
             <input id="offset" type="text" value="1"/>
             <button id="next">Next</button>
             <button id="last">Last</button>
+            <button id="preload">Preload next images</button>
             <hr/>
         </div>
         <div id="content">
