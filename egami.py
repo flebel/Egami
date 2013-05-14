@@ -2,7 +2,7 @@
 
 # Egami: a very simple image gallery built using Flask, which
 # serves image files found in the directory where it is executed.
-# Copyright (C) 2011-2012 Francois Lebel <francoislebel@gmail.com>
+# Copyright (C) 2011-2013 Francois Lebel <francoislebel@gmail.com>
 # http://github.com/flebel/egami
 #
 # This program is free software: you can redistribute it and/or modify
