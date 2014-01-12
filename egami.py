@@ -118,6 +118,9 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         //]]>
         </script>
         <style type="text/css">
+            button {
+                height: 50px;
+            }
             input#offset {
                 width: 30px;
             }
