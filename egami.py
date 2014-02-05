@@ -118,11 +118,11 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         //]]>
         </script>
         <style type="text/css">
-            button {
+            button, select {
                 height: 50px;
             }
-            input#offset {
-                width: 30px;
+            select#offset {
+                width: 50px;
             }
             img.current {
                 max-height: 640px;
@@ -139,7 +139,15 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         <div id="nav">
             <button id="first">First</button>
             <button id="previous">Previous</button>
-            <input id="offset" type="text" value="1"/>
+            <select id="offset">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
             <button id="next">Next</button>
             <button id="last">Last</button>
             <button id="preload">Preload next images</button>
