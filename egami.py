@@ -120,6 +120,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         <style type="text/css">
             button, select {
                 height: 50px;
+                margin-right: 20px;
             }
             select#offset {
                 width: 50px;
