@@ -29,7 +29,7 @@ import os
 # Note that glob does not support regular expressions, hence the duplications.
 IMAGE_EXTENSIONS = ('[gG][iI][fF]', '[jJ][pP][gG]', '[jJ][pP][eE][gG]', '[pP][nN][gG]')
 
-# Directory from which to serve the images. Must end with a forward slash.
+# Path from where images are served. Must end with a forward slash.
 IMAGES_URL = '/images/'
 
 HTML = """<?xml version="1.0" encoding="UTF-8"?>
