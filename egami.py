@@ -88,8 +88,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     e.preventDefault();
                     var offset = parseInt($('#offset').val());
                     changeImage(currentIndex - offset);
-                    // Preload the previous image according to the (new) current
-                    // position
+                    // Preload the previous image according to the (new) current position
                     preloadImage(currentIndex - offset);
                 });
 
@@ -97,8 +96,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     e.preventDefault();
                     var offset = parseInt($('#offset').val());
                     changeImage(currentIndex + offset);
-                    // Preload the next image according to the (new) current
-                    // position
+                    // Preload the next image according to the (new) current position
                     preloadImage(currentIndex + offset);
                 });
 
