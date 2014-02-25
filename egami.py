@@ -18,12 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, send_from_directory
-from jinja2 import Template
 import glob
 import json
 import os
 
+from flask import Flask, send_from_directory
+from jinja2 import Template
 
 # Look for files with an image extension (case insensitive.)
 # Note that glob does not support regular expressions, hence the duplications.
