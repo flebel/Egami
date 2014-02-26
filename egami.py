@@ -49,7 +49,6 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
 
                 function changeImage(index) {
                     validIndex = getValidIndex(index);
-                    $('a.current').attr('href', '{{images_url}}' + images[validIndex]);
                     $('img.current').attr('alt', images[validIndex]);
                     $('img.current').attr('src', '{{images_url}}' + images[validIndex]);
                     $('span.status').text("Now serving image " + (validIndex + 1) + " of {{number_images}} image(s) from '{{cwd}}':");
@@ -72,6 +71,20 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     $('<img />').attr('src', '{{images_url}}' + images[validIndex]).appendTo('body').hide();
                 }
 
+                function showPrevious() {
+                    var offset = parseInt($('#offset').val());
+                    changeImage(currentIndex - offset);
+                    // Preload the previous image according to the (new) current position
+                    preloadImage(currentIndex - offset);
+                }
+
+                function showNext() {
+                    var offset = parseInt($('#offset').val());
+                    changeImage(currentIndex + offset);
+                    // Preload the next image according to the (new) current position
+                    preloadImage(currentIndex + offset);
+                }
+
                 // Initially set the current image to the last one
                 if (images.length > 0) {
                     changeImage(currentIndex);
@@ -86,18 +99,12 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
 
                 $('button#previous').click(function(e) {
                     e.preventDefault();
-                    var offset = parseInt($('#offset').val());
-                    changeImage(currentIndex - offset);
-                    // Preload the previous image according to the (new) current position
-                    preloadImage(currentIndex - offset);
+                    showPrevious();
                 });
 
                 $('button#next').click(function(e) {
                     e.preventDefault();
-                    var offset = parseInt($('#offset').val());
-                    changeImage(currentIndex + offset);
-                    // Preload the next image according to the (new) current position
-                    preloadImage(currentIndex + offset);
+                    showNext();
                 });
 
                 $('button#last').click(function(e) {
@@ -110,6 +117,22 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     var offset = parseInt($('#offset').val());
                     for (var i = currentIndex, n = images.length; i < n; i += offset) {
                         preloadImage(i);
+                    }
+                });
+
+                $('a.current').click(function (e) {
+                    e.preventDefault();
+                    var action = $('#action').val();
+                    switch (action) {
+                        case 'previous':
+                            showPrevious();
+                            break;
+                        case 'next':
+                            showNext();
+                            break;
+                        case 'open':
+                            window.location = '{{images_url}}' + images[validIndex];
+                            break;
                     }
                 });
             });
@@ -149,12 +172,21 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
             </select>
             <button id="next">Next</button>
             <button id="last">Last</button>
-            <button id="preload">Preload next images</button>
             <hr/>
         </div>
         <div id="content">
             <p><span class="status"></span> <span class="filename"></span></p>
             <a class="current" href=""><img alt="" class="current" src=""/></a>
+        </div>
+        <div id="footer">
+            <hr/>
+            <button id="preload">Preload next images</button>
+            <select id="action">
+                <option value="previous" disabled selected>Action on click</option>
+                <option value="previous">Previous image</option>
+                <option value="next">Next image</option>
+                <option value="open">Open image</option>
+            </select>
         </div>
     </body>
 </html>"""
