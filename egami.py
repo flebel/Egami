@@ -92,27 +92,27 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     $('img.current').hide();
                 }
 
-                $('button#first').click(function(e) {
+                $('button#first').click(function (e) {
                     e.preventDefault();
                     changeImage(0);
                 });
 
-                $('button#previous').click(function(e) {
+                $('button#previous').click(function (e) {
                     e.preventDefault();
                     showPrevious();
                 });
 
-                $('button#next').click(function(e) {
+                $('button#next').click(function (e) {
                     e.preventDefault();
                     showNext();
                 });
 
-                $('button#last').click(function(e) {
+                $('button#last').click(function (e) {
                     e.preventDefault();
                     changeImage(images.length - 1);
                 });
 
-                $('button#preload').click(function(e) {
+                $('button#preload').click(function (e) {
                     e.preventDefault();
                     var offset = parseInt($('#offset').val());
                     for (var i = currentIndex, n = images.length; i < n; i += offset) {
