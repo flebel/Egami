@@ -23,6 +23,7 @@ import json
 import os
 
 from flask import Flask, send_from_directory
+from flask.ext.cache import Cache
 from jinja2 import Template
 
 # Look for files with an image extension (case insensitive.)
@@ -192,6 +193,8 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
 </html>"""
 
 app = Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+cache_timeout = 15 # 15 seconds
 
 def get_images():
     files = []
@@ -201,6 +204,7 @@ def get_images():
     return files
 
 @app.route('/')
+@cache.cached(timeout=cache_timeout)
 def album():
     images = get_images()
     template = Template(HTML)
