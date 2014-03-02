@@ -19,7 +19,7 @@ Limitations
 
 Usage
 =====
-#. Install Flask
+#. Install dependencies from requirements.txt
 #. Execute the script in the directory where the images to serve are located
 #. Browse to http://127.0.0.1:1235
 
