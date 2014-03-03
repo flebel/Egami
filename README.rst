@@ -6,10 +6,10 @@ directory where it is run.
 
 Goals
 =====
-- Do not require the configuration of a web server
-- Keep everything* contained within a single file
+- Self-contained web server
+- Single file program
 - Lazy load images
-- Support a very large number of files
+- Support for >10000 files
 
 Limitations
 ===========
