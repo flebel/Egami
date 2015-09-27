@@ -217,7 +217,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 cache_timeout = 15 # 15 seconds
 
 parser = argparse.ArgumentParser(description='Exposes on the web the images found in current directory.')
-parser.add_argument('port', metavar='port', type=int, help='port on which to expose the web server.')
+parser.add_argument('port', metavar='port', default=1235, type=int, help='port on which to expose the web server.')
 parser.add_argument('prefixes', metavar='prefix', type=str, nargs='*', help='list of file prefixes to be used to group images together.')
 
 def _find_common_prefix(strings):
