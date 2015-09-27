@@ -2,7 +2,7 @@
 
 # Egami: a very simple image gallery built using Flask, which
 # serves image files found in the directory where it is executed.
-# Copyright (C) 2011-2014 Francois Lebel <francoislebel@gmail.com>
+# Copyright (C) 2011-2015 Francois Lebel <francoislebel@gmail.com>
 # http://github.com/flebel/egami
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
 import glob
+import itertools
 import json
 import os
+
+from collections import defaultdict
 
 from flask import Flask, send_from_directory
 from flask.ext.cache import Cache
@@ -45,14 +49,17 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         <script type="text/javascript">
         //<![CDATA[
             $(document).ready(function() {
-                var images = {{images}};
-                var currentIndex = images.length - 1;
+                var groups = {{images}};
+                var groups_keys = Object.keys(groups);
+                var images = groups[groups_keys[0]];
+                var number_images = images.length;
+                var currentIndex = number_images - 1;
 
                 function changeImage(index) {
-                    validIndex = getValidIndex(index);
+                    var validIndex = getValidIndex(index);
                     $('img.current').attr('alt', images[validIndex]);
                     $('img.current').attr('src', '{{images_url}}' + images[validIndex]);
-                    $('span.status').text("Now serving image " + (validIndex + 1) + " of {{number_images}} image(s) from '{{cwd}}':");
+                    $('span.status').text("Now serving image " + (validIndex + 1) + " of " + number_images + " image(s) from '{{cwd}}':");
                     $('span.filename').text(images[validIndex]);
                     currentIndex = validIndex;
                 }
@@ -68,7 +75,7 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                 }
 
                 function preloadImage(index) {
-                    validIndex = getValidIndex(index);
+                    var validIndex = getValidIndex(index);
                     $('<img />').attr('src', '{{images_url}}' + images[validIndex]).appendTo('body').hide();
                 }
 
@@ -86,12 +93,12 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     preloadImage(currentIndex + offset);
                 }
 
-                // Initially set the current image to the last one
-                if (images.length > 0) {
-                    changeImage(currentIndex);
-                } else {
-                    $('img.current').hide();
-                }
+                $('select#group').change(function (e) {
+                    var group_name = $('#group').val();
+                    images = groups[group_name];
+                    number_images = images.length;
+                    changeImage(number_images - 1);
+                });
 
                 $('button#first').click(function (e) {
                     e.preventDefault();
@@ -136,6 +143,17 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                             break;
                     }
                 });
+
+                for (var i = 0; i < groups_keys.length; i++) {
+                    $('<option/>').val(groups_keys[i]).html(groups_keys[i]).appendTo('#group');
+                }
+
+                // Initially set the current image to the last one
+                if (images.length > 0) {
+                    changeImage(currentIndex);
+                } else {
+                    $('img.current').hide();
+                }
             });
         //]]>
         </script>
@@ -162,6 +180,8 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
         <div id="nav">
             <button id="first">First</button>
             <button id="previous">Previous</button>
+            <select id="group">
+            </select>
             <select id="offset">
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -196,12 +216,36 @@ app = Flask(__name__)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 cache_timeout = 15 # 15 seconds
 
+parser = argparse.ArgumentParser(description='Exposes on the web the images found in current directory.')
+parser.add_argument('port', metavar='port', type=int, help='port on which to expose the web server.')
+parser.add_argument('prefixes', metavar='prefix', type=str, nargs='*', help='list of file prefixes to be used to group images together.')
+
+def _find_common_prefix(strings):
+    """Given a list of `strings`, returns the longest common leading component.
+    http://stackoverflow.com/a/6718435
+    """
+    if not strings:
+        return ''
+    s1 = min(strings)
+    s2 = max(strings)
+    for i, c in enumerate(s1):
+        if c != s2[i]:
+            return s1[:i]
+    return s1
+
 def get_images():
     files = []
     for extension in IMAGE_EXTENSIONS:
         files.extend(glob.glob("*.%s" % extension))
     files.sort()
-    return files
+    if not PREFIXES:
+        prefix = _find_common_prefix(files)
+        return {prefix: files}
+    groups = defaultdict(list)
+    for f, p in itertools.product(files, PREFIXES):
+        if f.startswith(p):
+            groups[p].append(f)
+    return groups
 
 @app.route('/')
 @cache.cached(timeout=cache_timeout)
@@ -210,8 +254,7 @@ def album():
     template = Template(HTML)
     return template.render(cwd = os.getcwdu(),
                            images = json.dumps(images),
-                           images_url = IMAGES_URL,
-                           number_images = len(images))
+                           images_url = IMAGES_URL)
 
 @app.route(IMAGES_URL + '<filename>')
 def images(filename):
@@ -219,5 +262,7 @@ def images(filename):
 
 if __name__ == '__main__':
     #app.debug = True
-    app.run(port=1235)
+    args = parser.parse_args()
+    PREFIXES = sorted(args.prefixes)
+    app.run(port=args.port)
 
