@@ -236,7 +236,7 @@ def _find_common_prefix(strings):
 def get_images():
     files = []
     for extension in IMAGE_EXTENSIONS:
-        files.extend(glob.glob("*.%s" % extension))
+        files.extend(glob.glob('*.%s' % extension))
     files.sort()
     if not PREFIXES:
         prefix = _find_common_prefix(files)
@@ -252,9 +252,9 @@ def get_images():
 def album():
     images = get_images()
     template = Template(HTML)
-    return template.render(cwd = os.getcwdu(),
-                           images = json.dumps(images),
-                           images_url = IMAGES_URL)
+    return template.render(cwd=os.getcwdu(),
+                           images=json.dumps(images),
+                           images_url=IMAGES_URL)
 
 @app.route(IMAGES_URL + '<filename>')
 def images(filename):
