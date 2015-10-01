@@ -144,8 +144,12 @@ HTML = """<?xml version="1.0" encoding="UTF-8"?>
                     }
                 });
 
-                for (var i = 0; i < groups_keys.length; i++) {
-                    $('<option/>').val(groups_keys[i]).html(groups_keys[i]).appendTo('#group');
+                if (groups_keys.length <= 1) {
+                    $('select#group').remove();
+                } else {
+                    for (var i = 0; i < groups_keys.length; i++) {
+                        $('<option/>').val(groups_keys[i]).html(groups_keys[i]).appendTo('select#group');
+                    }
                 }
 
                 // Initially set the current image to the last one
