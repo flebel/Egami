@@ -24,7 +24,7 @@ import itertools
 import json
 import os
 
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 
 from flask import Flask, send_from_directory
 from flask.ext.cache import Cache
@@ -259,6 +259,15 @@ def album():
     return template.render(cwd=os.getcwdu(),
                            images=json.dumps(images),
                            images_url=IMAGES_URL)
+
+@app.route('/latest')
+def latest():
+    latest_images = reversed(sorted(glob.glob('*.*'), key=os.path.getctime))
+    humanized_extensions = [''.join(OrderedDict.fromkeys(ext.translate(None, '[]').lower())) for ext in IMAGE_EXTENSIONS]
+    for image, extension in itertools.product(latest_images, humanized_extensions):
+        if image.lower().endswith(extension):
+            break
+    return send_from_directory(os.getcwdu(), image)
 
 @app.route(IMAGES_URL + '<filename>')
 def images(filename):
