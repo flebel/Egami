@@ -251,6 +251,13 @@ def get_images():
             groups[p].append(f)
     return groups
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 @app.route('/')
 @cache.cached(timeout=cache_timeout)
 def album():
